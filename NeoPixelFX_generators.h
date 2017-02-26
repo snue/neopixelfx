@@ -20,7 +20,20 @@ public:
   }
 
   void update() {
-    color = Adafruit_NeoPixel::Color(random(156), random(156), random(156));
+    uint8_t r, g, b;
+    r = g = b = 0;
+
+    uint8_t assign = random(7) + 1;
+    if (assign & 0x1) {
+      r = random(256);
+    }
+    if (assign & 0x2) {
+      g = random(256);
+    }
+    if (assign & 0x4) {
+      b = random(256);
+    }
+    color = Adafruit_NeoPixel::Color(r, g, b);
   }
 };
 
@@ -33,7 +46,7 @@ public:
     return Adafruit_NeoPixel::Color(R, G, B);
   }
 
-    void update() {
+  void update() {
     // Constant color is constant.
   }
 };
