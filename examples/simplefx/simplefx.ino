@@ -28,7 +28,7 @@
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 // Delay between pixel updates (milliseconds)
-int delayval = 150;
+int period = 150;
 
 // Set up a nice set of effects.
 NeoPixelFX<compose_xor, // Chose a composition function. You can try xor, or, and, cover.
@@ -52,6 +52,6 @@ void loop() {
   fx.update();
 
   // Wait before showing the update.
-  delay(delayval);
+  delay(period);
 }
 
