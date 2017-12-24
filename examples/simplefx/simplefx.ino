@@ -28,19 +28,23 @@
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 // Delay between pixel updates (milliseconds)
-int period = 150;
+int period = 100;
 
-// Set up a nice set of effects.
-NeoPixelFX<compose_xor, // Chose a composition function. You can try xor, or, and, cover.
-  moving<NUMPIXELS/2, WRAP, confined<0,  2, ConstantColor< 40, 120, 40> > >, // Define one effect,
-  moving<NUMPIXELS/2, TURN, confined<4,  8, ConstantColor< 40, 120, 40> > >, // and another effect,
-  moving<NUMPIXELS,   TURN, confined<0,  1, ConstantColor<100, 100,  0> > >, // and another one,
-  moving<NUMPIXELS/2, WRAP, confined<5, 10, ConstantColor<100,   0,  0> > >  // and one more.
-  > fx(pixels); // The 'fx' is the actual name of the global effects set variable.
+// Set up a nice set of effects. This is the magic of the framework.
+NeoPixelFX<compose_avg, // Choose a composition function. You can try _xor, _or, _and, _cover, or _avg.
+                        // Composition controls how the values from all following effects are combined.
+           CurrentColor, // Show what is currently on the strip. This is a basic generator.
+           offset<NUMPIXELS/2, CurrentColor>, // Show what is on the other side of the strip.
+           moving<NUMPIXELS-1, WRAP, confined<1, RandomColor> > // Move a single random pixel around.
+           > fx(pixels); // Initialize this global 'fx' set to act on the pixel strip.
 
-// Initialize the NeoPixel library.
+// Do all the required initialization once.
 void setup() {
-   pixels.begin();
+  // Call initialization of the NeoPixels library.
+  pixels.begin();
+
+  // The FX framework does not require any extra setup.
+  // ...
 }
 
 // Periodically called main function.
