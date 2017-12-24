@@ -10,18 +10,30 @@
 #ifndef NEOPIXELFX_GENERATORS_H
 #define NEOPIXELFX_GENERATORS_H
 
+class CurrentColor {
+  const Adafruit_NeoPixel &pixels;
+public:
+  CurrentColor(const Adafruit_NeoPixel &pixel) : pixels(pixel) {}
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    return pixels.getPixelColor(pos);
+  }
+
+  void update() {
+  }
+};
+
 class RandomColor {
   uint32_t color;
 public:
- RandomColor(const Adafruit_NeoPixel&) : color(0) {}
+  RandomColor(const Adafruit_NeoPixel&) : color(0) {}
 
   uint32_t getPixelColor(uint16_t pos) const {
     return color;
   }
 
   void update() {
-    uint8_t r, g, b;
-    r = g = b = 0;
+    uint8_t r = 0, g = 0, b = 0;
 
     uint8_t assign = random(7) + 1;
     if (assign & 0x1) {
@@ -37,10 +49,25 @@ public:
   }
 };
 
-template<uint8_t R, uint8_t G, uint8_t B>
+
+template<uint32_t COLOR>
 class ConstantColor {
 public:
   ConstantColor(const Adafruit_NeoPixel &) {}
+
+  uint32_t getPixelColor(uint16_t /* pos */) const {
+    return COLOR;
+  }
+
+  void update() {
+    // Constant color is constant.
+  }
+};
+
+template<uint8_t R, uint8_t G, uint8_t B>
+class ConstantRGBColor {
+public:
+  ConstantRGBColor(const Adafruit_NeoPixel &) {}
 
   uint32_t getPixelColor(uint16_t pos) const {
     return Adafruit_NeoPixel::Color(R, G, B);
