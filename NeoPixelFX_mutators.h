@@ -10,18 +10,40 @@
 #ifndef NEOPIXELFX_MUTATORS_H
 #define NEOPIXELFX_MUTATORS_H
 
-template<uint16_t MIN, uint16_t MAX, typename FX>
+template<uint16_t WIDTH, typename FX>
 class confined {
   FX chain_fx;
 public:
-  confined(const Adafruit_NeoPixel &pixel) : chain_fx(pixel) {}
+  confined(const Adafruit_NeoPixel &pixel)
+    : chain_fx(pixel)
+  {}
 
   uint32_t getPixelColor(uint16_t pos) const {
-    if ((MIN <= pos) && (pos <= MAX)) {
+    if (pos < WIDTH) {
       return chain_fx.getPixelColor(pos);
     } else {
       return 0;
     }
+  }
+
+  void update() {
+    chain_fx.update();
+  }
+};
+
+template<int16_t OFFSET, typename FX>
+class offset {
+  const Adafruit_NeoPixel &pixels;
+  FX chain_fx;
+
+public:
+  offset(const Adafruit_NeoPixel &pixel)
+    : pixels(pixel), chain_fx(pixel)
+  {}
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    uint16_t opos = (pos + OFFSET) % pixels.numPixels();
+    return chain_fx.getPixelColor(opos);
   }
 
   void update() {
@@ -64,7 +86,27 @@ public:
         offset--;
       }
     }
-    
+
+    chain_fx.update();
+  }
+};
+
+template<typename FX>
+class decaying {
+  FX chain_fx;
+
+public:
+  decaying(const Adafruit_NeoPixel &pixel)
+    : chain_fx(pixel)
+  {}
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    uint32_t color = chain_fx.getPixelColor(pos);
+    color = (color & 0xfefefefe) >> 1;
+    return color;
+  }
+
+  void update() {
     chain_fx.update();
   }
 };
