@@ -51,6 +51,26 @@ public:
   }
 };
 
+template<typename FX>
+class mirrored {
+  const Adafruit_NeoPixel &pixels;
+  FX chain_fx;
+
+public:
+  mirrored(const Adafruit_NeoPixel &pixel)
+    : pixels(pixel), chain_fx(pixel)
+  {}
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    uint16_t mpos = pixels.numPixels() - pos - 1;
+    return chain_fx.getPixelColor(mpos);
+  }
+
+  void update() {
+    chain_fx.update();
+  }
+};
+
 template<uint16_t DISTANCE, bool WRAP, typename FX>
 class moving {
   const Adafruit_NeoPixel &pixels;
