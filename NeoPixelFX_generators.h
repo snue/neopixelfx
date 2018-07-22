@@ -93,4 +93,40 @@ public:
   }
 };
 
+template<uint16_t WIDTH>
+class Rainbow {
+public:
+  Rainbow(const Adafruit_NeoPixel &) {}
+  enum {
+    FULL = WIDTH/6,
+    STEP = 0xff / FULL
+  };
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    uint16_t phase = (pos % WIDTH) * 6 / WIDTH;
+    uint16_t amount = (pos % WIDTH) - (phase * FULL);
+
+    switch (phase) {
+    case 0:
+      return Adafruit_NeoPixel::Color(0xff, amount * STEP, 0);
+    case 1:
+      return Adafruit_NeoPixel::Color(0xff - (amount * STEP), 0xff, 0);
+    case 2:
+      return Adafruit_NeoPixel::Color(0, 0xff, amount * STEP);
+    case 3:
+      return Adafruit_NeoPixel::Color(0, 0xff - (amount * STEP), 0xff);
+    case 4:
+      return Adafruit_NeoPixel::Color(amount * STEP, 0, 0xff);
+    case 5:
+      return Adafruit_NeoPixel::Color(0xff, 0, 0xff - (amount * STEP));
+    default:
+      break;
+    }
+  }
+
+  void update() {
+  }
+};
+
+
 #endif
