@@ -3,6 +3,8 @@
 // Some nice effects for NeoPixel strips.
 // Initialization taken from Adafruit_NeoPixel library 'simple' example.
 //
+// This example demonstrates basic framework usage.
+//
 // Author: Stefan Nuernberger <kabelfrickler@gmail.com>
 // License: LGPLv3 (same as the NeoPixel library)
 //
