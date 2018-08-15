@@ -23,7 +23,6 @@ public:
   }
 };
 
-
 class RandomColor {
   uint32_t color;
 public:
@@ -49,7 +48,6 @@ public:
     color = Adafruit_NeoPixel::Color(r, g, b);
   }
 };
-
 
 template<uint32_t COLOR>
 class ConstantColor {
@@ -130,5 +128,35 @@ public:
   }
 };
 
+// Rainbow with a more uniform luminosity
+template<uint16_t WIDTH>
+class Rainbow2 {
+public:
+  Rainbow2(const Adafruit_NeoPixel &) {}
+  enum {
+        FULL = WIDTH/3,
+        STEP = 0xff / FULL
+  };
+
+  uint32_t getPixelColor(uint16_t pos) const {
+    uint16_t phase = (pos % WIDTH) * 3 / WIDTH;
+    uint16_t amount = (pos % WIDTH) - (phase * FULL);
+
+    switch (phase) {
+    case 0:
+      return Adafruit_NeoPixel::Color(0xff - (amount * STEP), amount * STEP, 0);
+    case 1:
+      return Adafruit_NeoPixel::Color(0, 0xff - (amount * STEP), amount * STEP);
+    case 2:
+      return Adafruit_NeoPixel::Color(amount * STEP, 0, 0xff - (amount * STEP));
+    default:
+      // should not happen
+      return Adafruit_NeoPixel::Color(0, 0, 0);
+    }
+  }
+
+  void update() {
+  }
+};
 
 #endif
