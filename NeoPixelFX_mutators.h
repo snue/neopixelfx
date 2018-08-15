@@ -42,8 +42,7 @@ public:
   {}
 
   uint32_t getPixelColor(uint16_t pos) const {
-    uint16_t opos = (pos + OFFSET) % pixels.numPixels();
-    return chain_fx.getPixelColor(opos);
+    return chain_fx.getPixelColor(pos + OFFSET);
   }
 
   void update() {
@@ -103,8 +102,7 @@ public:
   {}
 
   uint32_t getPixelColor(uint16_t pos) const {
-    uint16_t mpos = (pos + offset) % pixels.numPixels();
-    return chain_fx.getPixelColor(mpos);
+    return chain_fx.getPixelColor(pos + offset);
   }
 
   void update() {
@@ -190,11 +188,7 @@ class blinking {
   {}
 
   uint32_t getPixelColor(uint16_t pos) const {
-    if (on) {
-      return chain_fx.getPixelColor(pos);
-    } else {
-      return 0;
-    }
+    return on ? chain_fx.getPixelColor(pos) : 0;
   }
 
   void update() {

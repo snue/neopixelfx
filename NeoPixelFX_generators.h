@@ -16,12 +16,13 @@ public:
   CurrentColor(const Adafruit_NeoPixel &pixel) : pixels(pixel) {}
 
   uint32_t getPixelColor(uint16_t pos) const {
-    return pixels.getPixelColor(pos);
+    return pixels.getPixelColor(pos % pixels.numPixels());
   }
 
   void update() {
   }
 };
+
 
 class RandomColor {
   uint32_t color;
@@ -120,7 +121,8 @@ public:
     case 5:
       return Adafruit_NeoPixel::Color(0xff, 0, 0xff - (amount * STEP));
     default:
-      break;
+      // should not happen
+      return Adafruit_NeoPixel::Color(0, 0, 0);
     }
   }
 
